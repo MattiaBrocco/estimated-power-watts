@@ -147,5 +147,3 @@ if __name__ == '__main__':
     print(laps_df)
     print('\nPOINTS:')
     print(points_df)
-    
-
