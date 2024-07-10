@@ -14,7 +14,8 @@ from typing import Dict, Union, Optional,Tuple
 POINTS_COLUMN_NAMES = ['latitude', 'longitude', 'lap',
                        'altitude', 'cadence', 'calories', 'compressed_speed_distance',
                        'cycle_length', 'distance', 'enhanced_altitude', 'enhanced_speed',
-                       'grade', 'heart_rate', 'position_lat', 'position_long', 'power',
+                       'grade', 'heart_rate', 'position_lat', 'position_long', 'power', 'slope',
+                       'current_slope', 'filtered_altitude', 'compressed_speed_distance',
                        'resistance', 'speed', 'temperature', 'time_from_course', 'timestamp']
 
 
