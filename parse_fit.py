@@ -16,6 +16,7 @@ POINTS_COLUMN_NAMES = ['latitude', 'longitude', 'lap',
                        'cycle_length', 'distance', 'enhanced_altitude', 'enhanced_speed',
                        'grade', 'heart_rate', 'position_lat', 'position_long', 'power', 'slope',
                        'current_slope', 'filtered_altitude', 'compressed_speed_distance',
+                       'unknown_61', 'unknown_66', 'unknown_108', 'unknown_90',
                        'resistance', 'speed', 'temperature', 'time_from_course', 'timestamp']
 
 
