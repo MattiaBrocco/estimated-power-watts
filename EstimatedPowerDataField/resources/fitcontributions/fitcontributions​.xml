@@ -1,0 +1,9 @@
+<fitContributions>
+		<fitField id="0" 
+			displayInChart="true" 
+			sortOrder = "0" 
+			precision="1"
+			chartTitle="@Strings.power" 
+			dataLabel="@Strings.power"
+			unitLabel="@Strings.unit_W"  />
+</fitContributions>
