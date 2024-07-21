@@ -22,7 +22,13 @@ class EstimatedPowerView extends WatchUi.SimpleDataField {
         var altitude = Activity.Info.altitude;
         var cadence = Activity.Info.cadence;
         var Speed = Activity.Info.speed;
-        var Slope = Activity.Info.current_slope;
+        // var Slope = Activity.Info.current_slope;
+        
+        if (Activity.info has :slope) {
+            var Slope = Activity.Info.slope;
+        } else {
+            var Slope = Activity.Info.current_slope;
+        }
         var HeartRate =  Activity.Info.heart_rate;
 
         var power = computePower(userWeight, BikeWeight, Speed, Slope);
