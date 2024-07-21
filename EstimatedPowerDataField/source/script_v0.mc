@@ -64,7 +64,7 @@ class EstimatedPowerView extends WatchUi.SimpleDataField {
         return Math.max(P / userWeight, 0);
     }
 
-    function predict(altitude, cadence, Speed, Slope, HeartRate, userWeight, BikeWeight) {
+    function predict(altitude as Float, cadence as Float, Speed as Float, Slope as Float, HeartRate as Float, userWeight as Float, BikeWeight as Float) as Integer {
         var node = 0;  // start from the root
         var instance = [
             altitude,
@@ -87,7 +87,8 @@ class EstimatedPowerView extends WatchUi.SimpleDataField {
         }
         
         // When a leaf is reached
-        return values[node][0][0].toNumber();
+        var WattKg = values[node][0][0] * userWeight;
+        return WattKg.toNumber();
     }
     
 var thresholds = [4.35000000e+01, 2.55000000e+01, 1.65000000e+01, -2.00000000e+00,
