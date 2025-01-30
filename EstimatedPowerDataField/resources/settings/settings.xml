@@ -1,0 +1,5 @@
+<settings>	
+	<setting propertyKey="@Properties.BIKE_WEIGHT" title="@Strings.BIKE_WEIGHT">
+    	<settingConfig type="numeric" min="5.0" max="20.0" />
+	</setting>
+</settings>

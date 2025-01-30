@@ -1,10 +1,8 @@
 <strings>
     <string id="AppName">EstimatedPowerDataField</string>
-    <string id="speed">Speed</string>
-	<string id="distance">Distance</string>
-    <string id="power">Power</string>
-    <string id="unit_kmph">km/h</string>
-    <string id="unit_km">km</string>
-    <string id="unit_m">m</string>
-    <string id="unit_W">W</string>
+    <string id="label">My Value</string>
+    <string id="power_units">W</string>
+    <string id="power_label">Watt [W]</string>
+    <string id="power_graph_label">Power</string>
+    <string id="BIKE_WEIGHT">Weight of the bike</string>
 </strings>

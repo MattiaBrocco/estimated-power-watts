@@ -1,0 +1,5 @@
+<fitContributions>
+	<fitField id="0" displayInChart="true" sortOrder = "0" precision="0"
+	chartTitle="@Strings.power_graph_label" dataLabel="@Strings.power_label"
+	unitLabel="@Strings.power_units" fillColor="#FF0000" />
+</fitContributions>
