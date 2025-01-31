@@ -2,7 +2,6 @@ using Toybox.Lang;
 using Toybox.Time;
 using Toybox.System;
 using Toybox.WatchUi;
-using Toybox.AntPlus;
 using Toybox.Activity;
 using Toybox.UserProfile;
 using Toybox.Math as Math;
@@ -296,16 +295,11 @@ const VALUES = [2.16374269, 0.0, 0.0, 0.0, 0.15204678, 0.47953216,
               4.92397661, 6.30409357, 3.35672515, 3.34502924, 6.76023392, 6.30409357,
               1.05263158, 3.00584795, 0.0];
 
-var Slope;
 
-class EstimatedPowerDataFieldView extends WatchUi.SimpleDataField {
-
-    hidden var PowerField;
+class EstimatedPowerDataFieldView extends WatchUi.DataField {
 
     function initialize() {
-        SimpleDataField.initialize();
-
-        self.PowerField = createField("estimated_power", POWER_RECORD_ID, FitContributor.DATA_TYPE_FLOAT, { :nativeNum=>POWER_NATIVE_NUM_RECORD_MESG, :mesgType=>FitContributor.MESG_TYPE_RECORD, :units=>POWER_UNITS });
+        DataField.initialize();
     }
 
     function getParameter(paramName, defaultValue)
@@ -320,7 +314,7 @@ class EstimatedPowerDataFieldView extends WatchUi.SimpleDataField {
 	    return paramValue;
 	}
 
-    function power_physics(info) {
+    function power_physics() as Float {
         
         var BikeWeight = getParameter("BIKE_WEIGHT", 9.8);
         
@@ -329,117 +323,83 @@ class EstimatedPowerDataFieldView extends WatchUi.SimpleDataField {
         var P_rr = C_rr * m * info.currentSpeed * g;
         var P_aero = 0.5 * rho * C_d * A * Math.pow(info.currentSpeed, 3);
 
-        if (info has :slope) {Slope = info.slope;}
-        else if (info has :current_slope) {Slope = info.current_slope;}
-        else {Slope = 1;} // sbatti
-
+        // Gradient resistance
+        if (info has :slope) {
+            Slope = info.slope;
+        } else {
+            Slope = info.slope; // current_slope (!!!!!!!)
+        }
         var slope_rad = Slope * (Math.PI / 180);
         var P_gr = m * g * info.currentSpeed * Math.sin(slope_rad);
 
         var P = (P_rr + P_aero + P_gr) / eta;
 
-        var reading;
         if (P / userWeight <= 0) {
-            reading = 0;
+            return 0 as Float;
         } else {
-            reading = P / userWeight;
+            return P / userWeight as Float;
         }
-
-        return reading;
     }
 
-    function compute(info) {
-
-        if (info has :slope) {Slope = info.slope;}
-        else if (info has :current_slope) {Slope = info.current_slope;}
-        else {Slope = 1;} // sbatti
-
-        var instance = [
-            info.altitude,
-            info.currentCadence,
-            info.currentSpeed,
-            Slope,
-            info.currentHeartRate,
-            power_physics(info)
-        ];
-
-        var node = 0;  // start from the root
+    // Set your layout here. Anytime the size of obscurity of
+    // the draw context is changed this will be called.
+    function onLayout(dc) {
         
-        while (CHILDREN_LEFT[node] != -1) {  // while not a leaf
-            var feature_index = FEATURES[node];
-            var threshold = THRESHOLDS[node];
-            
-            if (instance[feature_index] <= threshold) {
-                node = CHILDREN_LEFT[node];
-            } else {
-                node = CHILDREN_RIGHT[node];
-            }
-        }
-        
-        // When a leaf is reached
-        var WattKg = VALUES[node] * userWeight;
-        return WattKg;
+        var width = dc.getWidth();
+		var height = dc.getHeight();
+		var obsc = getObscurityFlags();
+
+        var obs_LEFT = obsc & 1<0;
+		var obs_TOP = obsc & 1<1;
+		var obs_RIGHT = obsc & 1<2;
+		var obs_BOTT = obsc & 1<4;
+
+        if (height >= 240){
+           View.setLayout(Rez.Layouts.BigLayout1(dc));
+       	}else if (height > 120){
+			if (width==height){View.setLayout(Rez.Layouts.MediumLayout1(dc));}
+			else {View.setLayout(Rez.Layouts.BigLayout2(dc));}
+       	}else if (height > 82){
+			if (width==height){View.setLayout(Rez.Layouts.MediumLayout1(dc));}
+			else {View.setLayout(Rez.Layouts.MediumLayout2(dc));}
+       	}else if (height > 69){View.setLayout(Rez.Layouts.SmallLayout(dc));}
+		else {View.setLayout(Rez.Layouts.MicroLayout(dc));}
+
+        var labelView = View.findDrawableById("label") as Toybox.WatchUi.Text;
+        var valueView = View.findDrawableById("value") as Toybox.WatchUi.Text;
+
+        (View.findDrawableById("label") as Toybox.WatchUi.Text).setText("Slope");
     }
-
-    // // Set your layout here. Anytime the size of obscurity of
-    // // the draw context is changed this will be called.
-    // function onLayout(dc) {
-        
-    //     var width = dc.getWidth();
-	// 	var height = dc.getHeight();
-	// 	// var obsc = getObscurityFlags();
-
-    //     // var obs_LEFT = obsc & 1<0;
-	// 	// var obs_TOP = obsc & 1<1;
-	// 	// var obs_RIGHT = obsc & 1<2;
-	// 	// var obs_BOTT = obsc & 1<4;
-
-    //     if (height >= 240){
-    //        View.setLayout(Rez.Layouts.BigLayout1(dc));
-    //    	}else if (height > 120){
-	// 		if (width==height){View.setLayout(Rez.Layouts.MediumLayout1(dc));}
-	// 		else {View.setLayout(Rez.Layouts.BigLayout2(dc));}
-    //    	}else if (height > 82){
-	// 		if (width==height){View.setLayout(Rez.Layouts.MediumLayout1(dc));}
-	// 		else {View.setLayout(Rez.Layouts.MediumLayout2(dc));}
-    //    	}else if (height > 69){View.setLayout(Rez.Layouts.SmallLayout(dc));}
-	// 	else {View.setLayout(Rez.Layouts.MicroLayout(dc));}
-
-    //     // var labelView = View.findDrawableById("label") as Toybox.WatchUi.Text;
-    //     // var valueView = View.findDrawableById("value") as Toybox.WatchUi.Text;
-
-    //     (View.findDrawableById("label") as Toybox.WatchUi.Text).setText("Slope");
-    // }
     
 
-    // // function compute(info) {
-    // // }
-
-    // // Display the value you computed here. This will be called
-    // // once a second when the data field is visible.
-    // function onUpdate(dc) {
-    // // Set the background color
-    //     (View.findDrawableById("Background") as Toybox.WatchUi.Text).setColor(getBackgroundColor());
-    //     var value = View.findDrawableById("value") as Toybox.WatchUi.Text;
-    //     var label = View.findDrawableById("label") as Toybox.WatchUi.Text;
-	// 	var pc = View.findDrawableById("pc") as Toybox.WatchUi.Text;
-
-	// 	pc.setText(POWER_UNITS);
-    //     label.setColor(Graphics.COLOR_WHITE);
-
-    //     // Set the foreground color
-	// 	if (getBackgroundColor() == Graphics.COLOR_BLACK) {
-    //         value.setColor(Graphics.COLOR_WHITE);
-	// 		pc.setColor(Graphics.COLOR_WHITE);
-    //     } else {
-    //         value.setColor(Graphics.COLOR_BLACK);
-	// 		pc.setColor(Graphics.COLOR_BLACK);
-    //     }
-	// 	self.PowerField = compute(self).getValue();
-
-	// 	value.setText(PowerField.format("%.1f"));
-
-    //     // Call parent's onUpdate(dc) to redraw the layout
-    //     View.onUpdate(dc);
+    // function compute(info) {
     // }
+
+    // Display the value you computed here. This will be called
+    // once a second when the data field is visible.
+    function onUpdate(dc) {
+    // Set the background color
+        (View.findDrawableById("Background") as Toybox.WatchUi.Text).setColor(getBackgroundColor());
+        var value = View.findDrawableById("value") as Toybox.WatchUi.Text;
+        var label = View.findDrawableById("label") as Toybox.WatchUi.Text;
+		var pc = View.findDrawableById("pc") as Toybox.WatchUi.Text;
+
+		pc.setText(POWER_UNITS);
+        label.setColor(Graphics.COLOR_WHITE);
+
+        // Set the foreground color
+		if (getBackgroundColor() == Graphics.COLOR_BLACK) {
+            value.setColor(Graphics.COLOR_WHITE);
+			pc.setColor(Graphics.COLOR_WHITE);
+        } else {
+            value.setColor(Graphics.COLOR_BLACK);
+			pc.setColor(Graphics.COLOR_BLACK);
+        }
+		var reading = self.P.getValue();
+
+		value.setText(reading.format("%.1f"));
+
+        // Call parent's onUpdate(dc) to redraw the layout
+        View.onUpdate(dc);
+    }
 }
