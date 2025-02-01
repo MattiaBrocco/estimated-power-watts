@@ -2,13 +2,17 @@
 
 ## Overview
 
-This is a Garmin Simple Data Field that estimates **real-time power output (in Watt/Kg)** without requiring a physical power meter. The estimation is based on a **Decision Tree Regressor**, fine-tuned using a reference model called PIPPO, which defines pedal power based on core physical variables. The algorithm extends this logic by incorporating additional factors such as:
-
+This is a Garmin Simple Data Field that estimates **real-time power output (in Watt/Kg)** without requiring a physical power meter.
+Starting from a physics-informed model for computing power [[1]](#1), a **Decision Tree Regressor** with custom ex-post pruning has been implemented in order to extend the first model by incorporating additional factors such as:
 * Heart Rate
 * Cadence
 * Distance Elapsed
 * Slope/Grade
 
+The actual performance recorded on several .FIT files is the following:
+| MAE |
+| --- |
+| 0.20 W/kg (17.40 W @ 85 Kg) |
 ![image](https://github.com/user-attachments/assets/cb412864-58a5-4d92-867d-5b16787b201c)
 
 ## Requirements
@@ -40,6 +44,9 @@ The algorithm assumes the following units:
 ## Contribution & Feedback
 
 Feel free to open issues or submit pull requests to improve the algorithm or add new features. Feedback is always welcome!
+
+## References
+<a id="1">[1]</a> [Cycling power and speed](https://www.gribble.org/cycling/power_v_speed.html)
 
 Author: [Mattia Brocco](https://www.linkedin.com/in/mattia-brocco-data-science/)
 License: MIT License
