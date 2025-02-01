@@ -13,6 +13,7 @@ The actual performance recorded on several .FIT files is the following:
 | MAE |
 | --- |
 | 0.20 W/kg (17.40 W @ 85 Kg) |
+
 ![image](https://github.com/user-attachments/assets/cb412864-58a5-4d92-867d-5b16787b201c)
 
 ## Requirements
@@ -49,5 +50,7 @@ Feel free to open issues or submit pull requests to improve the algorithm or add
 <a id="1">[1]</a> [Cycling power and speed](https://www.gribble.org/cycling/power_v_speed.html)
 
 Author: [Mattia Brocco](https://www.linkedin.com/in/mattia-brocco-data-science/)
+
 License: MIT License
+
 MITVersion: v0.0
